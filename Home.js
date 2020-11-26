@@ -2,7 +2,6 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Alert, TextInput } from 'react-native';
 import { Header, Button, Icon, Input, ListItem } from 'react-native-elements';
-// import getData from './finalproject/Quiz';
 
 export default function Home( { navigation }) {
 

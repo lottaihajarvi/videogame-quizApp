@@ -4,7 +4,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from './finalproject/Home';
 import Quiz from './finalproject/Quiz';
 import EndPage from './finalproject/EndPage';
-import { View } from 'react-native';
 
   const Stack = createStackNavigator();
   

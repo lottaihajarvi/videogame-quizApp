@@ -23,7 +23,6 @@ export default function Quiz( { route, navigation }) {
   const [correctAnswer, setCorrectAnswer] = useState('');
   const [incorrectAnswers, setIncorrectAnswers] = useState([]);
   const [allAnswers, setAllAnswers] = useState([answers]);
-  const [userAnswer, setUserAnswer] = useState([]);
   const [score, setScore] = useState(0);
   const [scores, setScores] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -81,14 +80,14 @@ export default function Quiz( { route, navigation }) {
     return allAnswers;
   }
 
-  //check if answer is correct or incorrect, give points, mark question as answered in the question index
-  const checkAnswer = (allAnswers, correctAnswer, incorrectAnswers) => {
+  //check if answer is correct, give points, mark question as answered in the question index
+  const checkAnswer = (allAnswers) => {
       if (allAnswers === correctAnswer) {
         setScore(score + 1);
         getData();
         setQuestionIndex(questionIndex + 1);
       }
-      else if (allAnswers === incorrectAnswers) {
+      else {
         getData();
         setQuestionIndex(questionIndex + 1);
       }
@@ -107,10 +106,10 @@ export default function Quiz( { route, navigation }) {
         <Text style={{ width: 400, color: 'white', fontSize: 18, textAlign: 'center', paddingTop: 90, alignSelf:'center', justifyContent:'center', alignItems:'center' }}>{questions}</Text>
       </View>
       <View style={styles.optionscontainer}>
-        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20}} title={allAnswers[0]} type="outline" onPress={checkAnswer}/>
-        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20}} title={allAnswers[1]} type="outline" onPress={checkAnswer}/>
-        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20}} title={allAnswers[2]} type="outline" onPress={checkAnswer}/>
-        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20}} title={allAnswers[3]} type="outline" onPress={checkAnswer}/>
+        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20}} title={allAnswers[0]} type="outline" onPress={() => checkAnswer(allAnswers[0])}/>
+        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20}} title={allAnswers[1]} type="outline" onPress={() => checkAnswer(allAnswers[1])}/>
+        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20}} title={allAnswers[2]} type="outline" onPress={() => checkAnswer(allAnswers[2])}/>
+        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20}} title={allAnswers[3]} type="outline" onPress={() => checkAnswer(allAnswers[3])}/>
       </View>
       <View style={styles.buttoncontainer}>
         <Icon reverse type="material-community" name="skip-next-outline" color='#517fa4' size={30} onPress={getData} />
