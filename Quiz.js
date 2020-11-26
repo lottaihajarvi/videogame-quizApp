@@ -22,7 +22,7 @@ export default function Quiz( { route, navigation }) {
   const [questions, setQuestions] = useState([]);
   const [correctAnswer, setCorrectAnswer] = useState('');
   const [incorrectAnswers, setIncorrectAnswers] = useState([]);
-  const [allAnswers, setAllAnswers] = useState([answers]);
+  const [allAnswers, setAllAnswers] = useState([]);
   const [score, setScore] = useState(0);
   const [scores, setScores] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -55,16 +55,14 @@ export default function Quiz( { route, navigation }) {
             setQuestions(loadedQuestions.results[0].question);
             setCorrectAnswer(loadedQuestions.results[0].correct_answer);
             setIncorrectAnswers(loadedQuestions.results[0].incorrect_answers);
-            // const answers = [...incorrectAnswers, correctAnswer];
-            // const shuffleAnswers = shuffleArray(answers);
-            // setAllAnswers(shuffleAnswers);
-            setAllAnswers(answers);
+            const answers = [...loadedQuestions.results[0].incorrect_answers, loadedQuestions.results[0].correct_answer];
+            const shuffleAnswers = shuffleArray(answers);
+            setAllAnswers(shuffleAnswers);
             setQuestionIndex(questionIndex + 1);
           })
             .catch(err => console.error(err))
-        }
-
-  const answers = [...incorrectAnswers, correctAnswer];
+    }
+    
 
   //shuffle array of questions
   const shuffleArray = (allAnswers) => {
