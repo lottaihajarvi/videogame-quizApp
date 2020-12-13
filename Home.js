@@ -1,32 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Alert, TextInput } from 'react-native';
-import { Header, Button, Icon, Input, ListItem } from 'react-native-elements';
+import { StyleSheet, View, TextInput } from 'react-native';
+import { Button, Icon, Text } from 'react-native-elements';
 
-export default function Home( { navigation }) {
+export default function Home({ navigation }) {
 
   const [username, setUsername] = useState('');
 
   return (
     <View style={styles.container}>
-     <View style={styles.headercontainer}>
-       <Header
-          leftComponent={{ icon: 'menu', color: '#fff' }}
-          centerComponent={{ text: 'The Impossible Video Game Quiz', style: { color: '#fff', textAlign: 'center', fontSize: 16 } }}
-          rightComponent={{ icon: 'home', color: '#fff' }}
-          containerStyle={{ backgroundColor: '#517fa4', height: 100 }}
-       />
-     <View style={styles.startcontainer}>
-      <Icon name="gamepad-variant" type="material-community" size={100}/>
-      <TextInput
-          style={{ fontSize: 18, fontStyle: 'italic', width: 150, height: 50, marginTop: 20, marginBottom: 10, textAlign: 'center', borderColor: 'gray', borderWidth: 1, borderRadius: 50 }}
-          placeholder='username'
-          onChangeText={username => setUsername(username)}
-        />
-       <Button buttonStyle={{ width: 200, height: 50, marginTop: 10, marginBottom: 100, borderRadius: 20, backgroundColor: '#517fa4' }} onPress={() => navigation.navigate('Quiz', {username})} title="Start Quiz" />
+      <View style={styles.bgcontainer}>
+        <View style={styles.iconcontainer}>
+          <Icon name="gamepad-square-outline" color="white" type="material-community" size={210} />
+        </View>
       </View>
+      <Text h3 style={{ width: 400, color: '#324f67', fontSize: 20, fontFamily: 'serif', textAlign: 'center', paddingTop: 40, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>Video Game Quiz App</Text>
+      <Text style={{ width: 400, color: '#324f67', fontSize: 18, fontFamily: 'serif', textAlign: 'center', paddingTop: 20, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>Test your video game knowledge</Text>
+      <Text style={{ width: 390, color: '#324f67', fontSize: 16, fontFamily: 'serif', textAlign: 'center', paddingTop: 5, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>You have one minute to answer 10 tough questions related to video games before the timer runs out</Text>
+      <TextInput
+        style={{ fontSize: 18, width: 170, height: 50, marginTop: 20, marginBottom: 10, textAlign: 'center', borderColor: 'gray', borderWidth: 1, borderRadius: 50 }}
+        placeholder='enter username'
+        onChangeText={username => setUsername(username)}
+      />
+      <Button buttonStyle={{ width: 200, height: 50, marginTop: 10, marginBottom: 80, borderRadius: 20, backgroundColor: '#517fa4' }} onPress={() => navigation.navigate('Quiz', { username })} title="Start Quiz" />
     </View>
-  </View>
   );
 }
 
@@ -39,22 +35,16 @@ const styles = StyleSheet.create({
 
   },
 
-  headercontainer: {
-    flex: 1,
+  bgcontainer: {
+    flex: 2,
+    backgroundColor: '#517fa4',
     width: 500,
-    height: 100
 
   },
 
-  startcontainer: {
-    flex: 1,
-    marginTop: 10,
-    flexDirection: 'column',
-    marginTop: 200,
-    marginBottom: 10,
-    alignItems: 'center'
-
+  iconcontainer: {
+    marginTop: 80
 
   },
 
-  });
+});

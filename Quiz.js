@@ -1,74 +1,63 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Alert, TextInput } from 'react-native';
-import { Header, Button, Icon, Input, ListItem } from 'react-native-elements';
-import * as firebase from 'firebase';
+import { StyleSheet, Text, View, Animated } from 'react-native';
+import { Button, Icon } from 'react-native-elements';
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyBSC3m8tnKdvODV-Mvy8dOQ2J0nmE2NBKM",
-//   authDomain: "videogame-quiz-6f75d.firebaseapp.com",
-//   databaseURL: "https://videogame-quiz-6f75d.firebaseio.com",
-//   projectId: "videogame-quiz-6f75d",
-//   storageBucket: "videogame-quiz-6f75d.appspot.com",
-//   messagingSenderId: "158069297665",
-//   appId: "1:158069297665:web:2e422d2514d94edf2de600",
-//   measurementId: "G-XSPDQY7XG8"
-// };
 
-// firebase.initializeApp(firebaseConfig);
+export default function Quiz({ route, navigation }) {
 
-export default function Quiz( { route, navigation }) {
-
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState('');
   const [correctAnswer, setCorrectAnswer] = useState('');
   const [incorrectAnswers, setIncorrectAnswers] = useState([]);
-  const [allAnswers, setAllAnswers] = useState([]);
+  const [allAnswers, setAllAnswers] = useState('');
   const [score, setScore] = useState(0);
-  const [scores, setScores] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(0);
 
   const { username } = route.params;
 
   //when quiz is started, score is 0 and no questions have been answered
   useEffect(() => {
-     getData();
-     setScore(0);
-     setQuestionIndex(0);
-    //  firebase.database().ref('scores/').on('value', snapshot => {
-    //   const data = snapshot.val();
-    //   const prods = Object.values(data);
-    //   setScores(prods);
-    // });
-   }, []);
-
-  //  const saveScore = () => {
-  //   firebase.database().ref('scores/').push(
-  //     {'username': username, 'score': score}
-  //   );
-  // }
+    getData();
+    setScore(0);
+    setQuestionIndex(0);
+  }, []);
 
   //get guestions and answers data from open trivia database
   const getData = () => {
     fetch('https://opentdb.com/api.php?amount=10&category=15&difficulty=hard&type=multiple')
-          .then(response => response.json()) 
-          .then(loadedQuestions => {
-            setQuestions(loadedQuestions.results[0].question);
-            setCorrectAnswer(loadedQuestions.results[0].correct_answer);
-            setIncorrectAnswers(loadedQuestions.results[0].incorrect_answers);
-            const answers = [...loadedQuestions.results[0].incorrect_answers, loadedQuestions.results[0].correct_answer];
-            const shuffleAnswers = shuffleArray(answers);
-            setAllAnswers(shuffleAnswers);
-            setQuestionIndex(questionIndex + 1);
-          })
-            .catch(err => console.error(err))
-    }
-    
+      .then(response => response.json())
+      .then(loadedQuestions => {
+        setQuestions(loadedQuestions.results[0].question);
+        setCorrectAnswer(loadedQuestions.results[0].correct_answer);
+        setIncorrectAnswers(loadedQuestions.results[0].incorrect_answers);
+        const answers = [...loadedQuestions.results[0].incorrect_answers, loadedQuestions.results[0].correct_answer];
+        const shuffleAnswers = shuffleArray(answers);
+        setAllAnswers(shuffleAnswers);
+        setQuestionIndex(questionIndex + 1);
+        console.log(allAnswers);
+        // console.log(JSON.stringify(questions));
+        // JSON.parse(questions);
+        // JSON.parse(questions.replace(/&quot;/g,'"'));
+        // JSON.parse(questions.replace(/&‌#039;/g,'"'));
+        // questions.replace(/&‌#039;/g,'"');
+
+      })
+      .catch(err => console.error(err))
+  }
+
+  const questionsFinal = questions.replace(/&quot;/g, '"').replace(/&sup2;:/g, ' 2').replace(/&#039;s/g, '’s').replace(/&#039;/g, '"');
+  // const answersFinal = allAnswers.replace(/&#039;/g,'"').replace(/&#039;s/g,'’s');
+  // const rightAnswersFinal = correctAnswer.replace(/&#039;/g,'"').replace(/&#039;s/g,'’s');
+  // const wrongAnswersFinal = incorrectAnswers.replace(/&#039;/g,'"').replace(/&#039;s/g,'’s');
+  // const finalAnswers = [...wrongAnswersFinal, rightAnswersFinal];
+  // console.log(answersFinal);
+
 
   //shuffle array of questions
   const shuffleArray = (allAnswers) => {
-    for (var i = allAnswers.length - 1; i > 0; i--) {  
+    for (var i = allAnswers.length - 1; i > 0; i--) {
 
-      var index = Math.floor(Math.random() * (i + 1));  
+      var index = Math.floor(Math.random() * (i + 1));
 
       var temp = allAnswers[i];
       allAnswers[i] = allAnswers[index];
@@ -80,36 +69,57 @@ export default function Quiz( { route, navigation }) {
 
   //check if answer is correct, give points, mark question as answered in the question index
   const checkAnswer = (allAnswers) => {
-      if (allAnswers === correctAnswer) {
-        setScore(score + 1);
-        getData();
-        setQuestionIndex(questionIndex + 1);
-      }
-      else {
-        getData();
-        setQuestionIndex(questionIndex + 1);
-      }
-    }
+    if (allAnswers === correctAnswer) {
+      setScore(score + 1);
+      getData();
+      setQuestionIndex(questionIndex + 1);
 
-    //when all questions have been answered -> endpage.js
-    if (questionIndex >= 11) {
-      navigation.navigate('Results', {username, score})
     }
+    else {
+      getData();
+      setQuestionIndex(questionIndex + 1);
+    }
+  }
+
+  //when all questions have been answered -> endpage.js
+  if (questionIndex >= 11) {
+    navigation.navigate('Results', { username, score })
+  }
 
 
   return (
     <View style={styles.container}>
       <View style={styles.bgcontainer}>
-        <Text style={{ width: 400, color: 'white', fontSize: 18, textAlign: 'center', paddingTop: 80, alignSelf:'center', justifyContent:'center', alignItems:'center' }}>Score: {score}/10</Text>
-        <Text style={{ width: 400, color: 'white', fontSize: 18, textAlign: 'center', paddingTop: 90, alignSelf:'center', justifyContent:'center', alignItems:'center' }}>{questions}</Text>
+        <Text style={{ width: 400, color: 'white', fontSize: 20, fontFamily: 'serif', textAlign: 'center', paddingTop: 80, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>Question: {questionIndex}/10</Text>
+        <Text style={{ width: 400, color: 'white', fontSize: 19, fontFamily: 'serif', textAlign: 'center', paddingTop: 10, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>Score: {score}</Text>
+        <Text style={{ width: 390, color: 'white', fontSize: 18, fontFamily: 'serif', textAlign: 'center', paddingTop: 60, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>{questionsFinal}</Text>
       </View>
       <View style={styles.optionscontainer}>
-        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20}} title={allAnswers[0]} type="outline" onPress={() => checkAnswer(allAnswers[0])}/>
-        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20}} title={allAnswers[1]} type="outline" onPress={() => checkAnswer(allAnswers[1])}/>
-        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20}} title={allAnswers[2]} type="outline" onPress={() => checkAnswer(allAnswers[2])}/>
-        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20}} title={allAnswers[3]} type="outline" onPress={() => checkAnswer(allAnswers[3])}/>
+        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20 }} title={allAnswers[0]} type="outline" onPress={() => checkAnswer(allAnswers[0])} />
+        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20 }} title={allAnswers[1]} type="outline" onPress={() => checkAnswer(allAnswers[1])} />
+        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20 }} title={allAnswers[2]} type="outline" onPress={() => checkAnswer(allAnswers[2])} />
+        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20 }} title={allAnswers[3]} type="outline" onPress={() => checkAnswer(allAnswers[3])} />
       </View>
       <View style={styles.buttoncontainer}>
+        <View style={styles.timercontainer}>
+          <CountdownCircleTimer
+            isPlaying
+            duration={60}
+            size={120}
+            colors="#517fa4"
+            onComplete={() => {
+              navigation.navigate('Results', { username, score })
+              // return [true, 0]
+            }}
+          >
+            {({ remainingTime }) => (
+              <Animated.Text
+                style={{ ...styles.remainingTime }}>
+                {remainingTime}
+              </Animated.Text>
+            )}
+          </CountdownCircleTimer>
+        </View>
         <Icon reverse type="material-community" name="skip-next-outline" color='#517fa4' size={30} onPress={getData} />
       </View>
     </View>
@@ -126,36 +136,52 @@ const styles = StyleSheet.create({
   },
 
   buttoncontainer: {
-      flex: 1,
-      flexDirection: 'row',
-      alignItems: 'flex-end',
-      justifyContent: 'flex-end',
-      marginBottom: 20,
-      marginLeft: 300
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    marginBottom: 20,
+    marginLeft: 300,
+    marginRight: 10
 
-    },
+  },
 
-    bgcontainer: {
-      flex: 2,
-      backgroundColor: '#517fa4',
-      width: 500,
+  timercontainer: {
+    flex: 3,
+    justifyContent: 'flex-end',
+    alignSelf: 'center',
+    alignItems: 'flex-end',
+    backgroundColor: '#eef3f7',
+    marginRight: 60,
+    marginTop: 30
 
-    },
+  },
 
-    optionscontainer: {
-        flex: 1,
-        marginTop: 40,
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        marginBottom: 10
-    
-      },
+  remainingTime: {
+    fontSize: 20,
+  },
 
-      listcontainer: {
-        flexDirection: 'row',
-        backgroundColor: '#fff',
-        alignItems: 'center',
-     
-      },
+  bgcontainer: {
+    flex: 2,
+    backgroundColor: '#517fa4',
+    width: 500,
 
-  });
+  },
+
+  optionscontainer: {
+    flex: 1,
+    marginTop: 40,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    marginBottom: 10
+
+  },
+
+  listcontainer: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+
+  },
+
+});
