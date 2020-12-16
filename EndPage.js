@@ -4,7 +4,7 @@ import { Button, Icon, ListItem, Avatar } from 'react-native-elements';
 import * as SQLite from 'expo-sqlite';
 
 
-export default function HighScores({ route, navigation }) {
+export default function EndPage({ route, navigation }) {
 
 
   const db = SQLite.openDatabase('hscoredb.db');
@@ -18,6 +18,7 @@ export default function HighScores({ route, navigation }) {
     }, null, updateList);
   }, []);
 
+  //save highscore
   const saveHighscore = () => {
     db.transaction(tx => {
       tx.executeSql('insert into hscore (score, username) values (?, ?);', [parseInt(score), username]);
@@ -25,6 +26,7 @@ export default function HighScores({ route, navigation }) {
     )
   }
 
+  //update list of highscores
   const updateList = () => {
     db.transaction(tx => {
       tx.executeSql('select * from hscore;', [], (_, { rows }) =>
@@ -33,6 +35,7 @@ export default function HighScores({ route, navigation }) {
     });
   }
 
+  //delete highscore
   const deleteHighscore = (id) => {
     db.transaction(
       tx => {
@@ -41,17 +44,19 @@ export default function HighScores({ route, navigation }) {
     )
   }
 
+  //list of highscores
   const renderHighscore = ({ item }) => (
     <ListItem bottomDivider>
       <Avatar rounded icon={{ name: 'user', color: '#fff', type: 'font-awesome' }} overlayContainerStyle={{ backgroundColor: 'gray' }} />
       <ListItem.Content>
-        <ListItem.Title>{item.username}</ListItem.Title>
+        <ListItem.Title style={{ fontFamily: 'serif' }}>{item.username}</ListItem.Title>
         <ListItem.Subtitle>{item.score}/10</ListItem.Subtitle>
       </ListItem.Content>
       <ListItem.Chevron type="material-community" name="delete-sweep-outline" color='#517fa4' size={30} onPress={() => deleteHighscore(item.id)} />
     </ListItem>
   )
 
+  //show results and highscores
   return (
     <View style={styles.container}>
       <View style={styles.bgcontainer}>
@@ -59,17 +64,17 @@ export default function HighScores({ route, navigation }) {
           <View style={styles.iconcontainer}>
             <Icon type="material-community" name="balloon" color='#fff' size={50} />
             <Icon type="material-community" name="balloon" color='#fff' size={30} />
-            <Text style={{ color: 'white', fontSize: 21, fontFamily: 'serif', paddingTop: 15, marginLeft: 55, marginRight: 55 }}>Your results:</Text>
+            <Text style={{ color: 'white', fontSize: 21, fontFamily: 'serif', fontWeight: 'bold', paddingTop: 15, marginLeft: 50, marginRight: 50 }}>Your results:</Text>
             <Icon type="material-community" name="balloon" color='#fff' size={30} />
             <Icon type="material-community" name="balloon" color='#fff' size={50} />
           </View>
           <View style={styles.resultscontainer}>
-            <Text style={{ color: 'white', fontSize: 18, fontFamily: 'serif', paddingTop: 10, marginBottom: 10, marginRight: 20 }}>{username}: {score}/10</Text>
+            <Text style={{ color: 'white', fontSize: 20, fontFamily: 'serif', paddingTop: 10, marginBottom: 20, marginRight: 10 }}>{username}: {score}/10</Text>
             <Icon type="material-community" name="plus-circle-outline" color='#fff' size={45} onPress={saveHighscore} />
           </View>
           <View style={styles.iconcontainer}>
             <Icon type="material-community" name="trophy" color='#fff' size={29} />
-            <Text style={{ color: 'white', fontSize: 20, fontFamily: 'serif', marginLeft: 10, marginRight: 10 }}>Your Highscores</Text>
+            <Text style={{ color: 'white', fontSize: 20, fontFamily: 'serif', marginLeft: 10, marginRight: 10 }}>Highscores</Text>
             <Icon type="material-community" name="trophy" color='#fff' size={29} />
           </View>
           <View style={styles.listcontainer}>
@@ -82,6 +87,7 @@ export default function HighScores({ route, navigation }) {
         </View>
       </View>
       <View style={styles.buttoncontainer}>
+        {/* <Button icon={{ name: 'trophy', type: 'material-community', color: '#fff', textAlign: 'center' }} buttonStyle={{ width: 200, height: 50, marginTop: 20, marginBottom: 30, borderRadius: 20, backgroundColor: '#517fa4' }} title="View Highscores" type="solid" onPress={() => navigation.navigate('High Scores', { username, score, scores, deleteHighscore })} />  */}
         <Button icon={{ name: 'repeat', color: '#fff', textAlign: 'center' }} buttonStyle={{ width: 200, height: 50, marginTop: 20, marginBottom: 30, borderRadius: 20, backgroundColor: '#517fa4' }} title="Try Again" type="solid" onPress={() => navigation.navigate('Home')} />
       </View>
     </View>
@@ -133,9 +139,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#517fa4',
     alignItems: 'flex-start',
-    width: 380,
+    width: 410,
     marginTop: 15,
-    marginBottom: 10,
     borderRadius: 100
 
   },

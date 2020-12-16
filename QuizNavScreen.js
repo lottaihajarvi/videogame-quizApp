@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from './finalproject/Home';
 import Quiz from './finalproject/Quiz';
 import EndPage from './finalproject/EndPage';
-import HighScores from './finalproject/HighScores';
+import HighScores from './finalproject/HighScores.js';
 
   const Stack = createStackNavigator();
   

@@ -34,22 +34,13 @@ export default function Quiz({ route, navigation }) {
         const shuffleAnswers = shuffleArray(answers);
         setAllAnswers(shuffleAnswers);
         setQuestionIndex(questionIndex + 1);
-        console.log(allAnswers);
-        // console.log(JSON.stringify(questions));
-        // JSON.parse(questions);
-        // JSON.parse(questions.replace(/&quot;/g,'"'));
-        // JSON.parse(questions.replace(/&‌#039;/g,'"'));
-        // questions.replace(/&‌#039;/g,'"');
-
       })
       .catch(err => console.error(err))
   }
 
-  const questionsFinal = questions.replace(/&quot;/g, '"').replace(/&sup2;:/g, ' 2').replace(/&#039;s/g, '’s').replace(/&#039;/g, '"');
-  // const answersFinal = allAnswers.replace(/&#039;/g,'"').replace(/&#039;s/g,'’s');
-  // const rightAnswersFinal = correctAnswer.replace(/&#039;/g,'"').replace(/&#039;s/g,'’s');
-  // const wrongAnswersFinal = incorrectAnswers.replace(/&#039;/g,'"').replace(/&#039;s/g,'’s');
-  // const finalAnswers = [...wrongAnswersFinal, rightAnswersFinal];
+  //replace special characters in the text
+  const questionsFinal = questions.replace(/&quot;/g, '"').replace(/&sup2;:/g, ' 2').replace(/&#039;s/g, '’s').replace(/&#039;/g, '"').replace(/&rsquo;s;/g, '’s').replace(/&eacute;/g, 'é');
+  // const answersFinal = allAnswers.toString().replace(/&quot;/g, '"').replace(/&#039;/g, '"').replace(/&#039;s/g, '’s').replace(/&amp;/g, '&').replace(/&#039;s/g, '’s');
   // console.log(answersFinal);
 
 
@@ -67,7 +58,7 @@ export default function Quiz({ route, navigation }) {
     return allAnswers;
   }
 
-  //check if answer is correct, give points, mark question as answered in the question index
+  //check if answer is correct, give points and mark question as answered in the question index
   const checkAnswer = (allAnswers) => {
     if (allAnswers === correctAnswer) {
       setScore(score + 1);
@@ -86,19 +77,19 @@ export default function Quiz({ route, navigation }) {
     navigation.navigate('Results', { username, score })
   }
 
-
+  //show questions, score, answers, timer and skip button
   return (
     <View style={styles.container}>
       <View style={styles.bgcontainer}>
         <Text style={{ width: 400, color: 'white', fontSize: 20, fontFamily: 'serif', textAlign: 'center', paddingTop: 80, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>Question: {questionIndex}/10</Text>
         <Text style={{ width: 400, color: 'white', fontSize: 19, fontFamily: 'serif', textAlign: 'center', paddingTop: 10, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>Score: {score}</Text>
-        <Text style={{ width: 390, color: 'white', fontSize: 18, fontFamily: 'serif', textAlign: 'center', paddingTop: 60, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>{questionsFinal}</Text>
+        <Text style={{ width: 390, color: 'white', fontSize: 18, fontFamily: 'serif', textAlign: 'center', paddingTop: 55, alignSelf: 'center', justifyContent: 'center', alignItems: 'center' }}>{questionsFinal}</Text>
       </View>
       <View style={styles.optionscontainer}>
-        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20 }} title={allAnswers[0]} type="outline" onPress={() => checkAnswer(allAnswers[0])} />
-        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20 }} title={allAnswers[1]} type="outline" onPress={() => checkAnswer(allAnswers[1])} />
-        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20 }} title={allAnswers[2]} type="outline" onPress={() => checkAnswer(allAnswers[2])} />
-        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20 }} title={allAnswers[3]} type="outline" onPress={() => checkAnswer(allAnswers[3])} />
+        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20, backgroundColor: '#517fa4' }} title={allAnswers[0]} type="solid" onPress={() => checkAnswer(allAnswers[0])} />
+        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20, backgroundColor: '#517fa4' }} title={allAnswers[1]} type="solid" onPress={() => checkAnswer(allAnswers[1])} />
+        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20, backgroundColor: '#517fa4' }} title={allAnswers[2]} type="solid" onPress={() => checkAnswer(allAnswers[2])} />
+        <Button buttonStyle={{ width: 300, marginBottom: 10, borderRadius: 20, backgroundColor: '#517fa4' }} title={allAnswers[3]} type="solid" onPress={() => checkAnswer(allAnswers[3])} />
       </View>
       <View style={styles.buttoncontainer}>
         <View style={styles.timercontainer}>
@@ -109,7 +100,7 @@ export default function Quiz({ route, navigation }) {
             colors="#517fa4"
             onComplete={() => {
               navigation.navigate('Results', { username, score })
-              // return [true, 0]
+              //    return [true, 0]
             }}
           >
             {({ remainingTime }) => (
@@ -147,13 +138,14 @@ const styles = StyleSheet.create({
   },
 
   timercontainer: {
-    flex: 3,
+    flex: 1,
     justifyContent: 'flex-end',
     alignSelf: 'center',
     alignItems: 'flex-end',
     backgroundColor: '#eef3f7',
     marginRight: 60,
-    marginTop: 30
+    marginTop: 140,
+    marginBottom: 10
 
   },
 
@@ -162,7 +154,7 @@ const styles = StyleSheet.create({
   },
 
   bgcontainer: {
-    flex: 2,
+    flex: 1.8,
     backgroundColor: '#517fa4',
     width: 500,
 
